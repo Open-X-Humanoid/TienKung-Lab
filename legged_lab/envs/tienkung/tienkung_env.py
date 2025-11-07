@@ -366,7 +366,6 @@ class TienKungEnv(VecEnv):
 
         current_actor_obs = torch.cat(
             [
-                root_lin_vel * self.obs_scales.lin_vel,  # 3
                 ang_vel * self.obs_scales.ang_vel,  # 3
                 projected_gravity * self.obs_scales.projected_gravity,  # 3
                 command * self.obs_scales.commands,  # 3
@@ -379,7 +378,7 @@ class TienKungEnv(VecEnv):
             ],
             dim=-1,
         )
-        current_critic_obs = torch.cat([current_actor_obs, feet_contact], dim=-1)
+        current_critic_obs = torch.cat([current_actor_obs, root_lin_vel * self.obs_scales.lin_vel, feet_contact], dim=-1)
 
         return current_actor_obs, current_critic_obs
 

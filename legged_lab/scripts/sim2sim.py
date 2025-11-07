@@ -36,7 +36,7 @@ class SimToSimCfg:
     class sim:
         sim_duration = 100.0
         num_action = 20
-        num_obs_per_step = 78
+        num_obs_per_step = 75
         actor_obs_history_length = 10
         dt = 0.005
         decimation = 4
@@ -150,34 +150,22 @@ class MujocoRunner:
         self.dof_pos = self.data.sensordata[0:20]
         self.dof_vel = self.data.sensordata[20:40]
 
-        obs = np.zeros((self.cfg.sim.num_obs_per_step,), dtype=np.float32)
-
-        # Linear vel
-        obs[0:3] = self.data.sensor("linear-velocity").data.astype(np.double)
-
-        # Angular vel
-        obs[3:6] = self.data.sensor("angular-velocity").data.astype(np.double)
-
-        # Projected gravity
-        obs[6:9] = self.quat_rotate_inverse(
-            self.data.sensor("orientation").data[[1, 2, 3, 0]].astype(np.double), np.array([0, 0, -1])
-        )
-        # Command velocity
-        obs[9:12] = self.command_vel
-
-        # Dof pos
-        obs[12:32] = (self.dof_pos - self.default_dof_pos)[self.mujoco_to_isaac_idx]
-
-        # Dof vel
-        obs[32:52] = self.dof_vel[self.mujoco_to_isaac_idx]
-
-        # Action
-        obs[52:72] = np.clip(self.action, -self.cfg.sim.clip_actions, self.cfg.sim.clip_actions)
-
-        # Gait parameters
-        obs[72:74] = np.sin(2 * np.pi * self.gait_phase)
-        obs[74:76] = np.cos(2 * np.pi * self.gait_phase)
-        obs[76:78] = self.phase_ratio
+        obs = np.concatenate(
+            [
+                self.data.sensor("angular-velocity").data.astype(np.double),  # 3
+                self.quat_rotate_inverse(
+                    self.data.sensor("orientation").data[[1, 2, 3, 0]].astype(np.double), np.array([0, 0, -1])
+                ),  # 3
+                self.command_vel,  # 3
+                (self.dof_pos - self.default_dof_pos)[self.mujoco_to_isaac_idx],  # 20
+                self.dof_vel[self.mujoco_to_isaac_idx],  # 20
+                np.clip(self.action, -self.cfg.sim.clip_actions, self.cfg.sim.clip_actions),  # 20
+                np.sin(2 * np.pi * self.gait_phase),  # 2
+                np.cos(2 * np.pi * self.gait_phase),  # 2
+                self.phase_ratio,  # 2
+            ],
+            axis=0,
+        ).astype(np.float32)
 
         # Update observation history
         self.obs_history = np.roll(self.obs_history, shift=-self.cfg.sim.num_obs_per_step)

@@ -26,10 +26,11 @@
 
 This framework is an RL-based locomotion control system designed for full-sized humanoid robots, TienKung. It integrates AMP-style rewards with periodic gait rewards, facilitating natural, stable, and efficient walking and running behaviors.
 
-The codebase is built on IsaacLab, supports Sim2Sim transfer to MuJoCo, and features a modular architecture for seamless customization and extension. Additionally, it incorporates ray-casting-based sensors for enhanced perception, enabling precise environmental interaction and obstacle avoidance.
+The codebase is built on IsaacLab, supports Sim2Sim transfer to MuJoCo, and features a modular architecture for seamless customization and extension. Additionally, it incorporates ray-casting-based sensors for enhanced perception, enabling precise environmental interaction and obstacle avoidance. The framework has also been successfully validated on the real TienKung robot.
 
 ## TODO List
 - [x] Motion retargeting support 2025-09-27
+- [x] Add sim2real demo 2025-11-07
 - [ ] Add more sensors
 - [ ] Add Perceptive Control
 
@@ -141,15 +142,17 @@ Evaluate the trained policy in MuJoCo to perform cross-simulation validation.
 
 Exported_policy/ contains pretrained policies provided by the project. When using the play script, trained policy is exported automatically and saved to path like logs/run/[timestamp]/exported/policy.pt.
 ```bash
-python legged_lab/scripts/sim2sim.py --task walk --policy Exported_policy/walk.pt --duration 10
-python legged_lab/scripts/sim2sim.py --task run --policy Exported_policy/run.pt --duration 10
+python legged_lab/scripts/sim2sim.py --task walk --policy Exported_policy/walk.pt --duration 100
 ```
 
-### Tensorboard
-```bash
-tensorboard --logdir=logs/walk
-tensorboard --logdir=logs/run
-```
+### Sim2Real
+The results of the TienKung-Lab have been successfully verified on the real **TienKung** robot.
+
+In the near future, the robot SDK and deployment interfaces will be gradually released to the public to support further research and development.
+
+<p align="center">
+  <img src="docs/walk_real.gif" width="200">
+</p>
 
 ## Code formatting
 
