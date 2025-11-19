@@ -31,6 +31,7 @@ The codebase is built on IsaacLab, supports Sim2Sim transfer to MuJoCo, and feat
 ## TODO List
 - [x] Motion retargeting support 2025-09-27
 - [x] Add sim2real demo 2025-11-07
+- [x] Add a hyperlink to the deployment [repository](https://github.com/Open-X-Humanoid/Deploy_Tienkung.git) 2025-11-19
 - [ ] Add more sensors
 - [ ] Add Perceptive Control
 
@@ -148,7 +149,7 @@ python legged_lab/scripts/sim2sim.py --task walk --policy Exported_policy/walk.p
 ### Sim2Real
 The results of the TienKung-Lab have been successfully verified on the real **TienKung** robot.
 
-In the near future, the robot SDK and deployment interfaces will be gradually released to the public to support further research and development.
+For deployment details, refer to the repository [here](https://github.com/Open-X-Humanoid/Deploy_Tienkung.git).
 
 <p align="center">
   <img src="docs/walk_real.gif" width="200">
