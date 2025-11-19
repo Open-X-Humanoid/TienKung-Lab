@@ -151,6 +151,8 @@ The results of the TienKung-Lab have been successfully verified on the real **Ti
 
 For deployment details, refer to the repository [here](https://github.com/Open-X-Humanoid/Deploy_Tienkung.git).
 
+**Safety Notice:** Testing on real robot is risky. RL policy may cause unexpected or violent motions, so ensure accident insurance is in place and the emergency stop works.
+
 <p align="center">
   <img src="docs/walk_real.gif" width="200">
 </p>
