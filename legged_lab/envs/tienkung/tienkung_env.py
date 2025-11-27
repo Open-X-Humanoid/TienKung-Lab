@@ -289,7 +289,7 @@ class TienKungEnv(VecEnv):
             [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]], dtype=torch.float32, device=device
         )
 
-        lin_vel = visual_motion_frame[27:30].clone()
+        lin_vel = visual_motion_frame[26:29].clone()
         ang_vel = torch.zeros_like(lin_vel)
 
         # root state: [x, y, z, qw, qx, qy, qz, vx, vy, vz, wx, wy, wz]
