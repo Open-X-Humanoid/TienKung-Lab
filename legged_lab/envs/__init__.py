@@ -38,19 +38,10 @@ from legged_lab.envs.dex.dex_env import DexEnv
 from legged_lab.envs.dex.run_cfg import DexRunAgentCfg, DexRunFlatEnvCfg
 from legged_lab.envs.dex.walk_cfg import DexWalkAgentCfg, DexWalkFlatEnvCfg
 
-from legged_lab.envs.tienkung_pro.tienkung_env import TienKungProEnv
-from legged_lab.envs.tienkung_pro.walk_cfg import TienKungProWalkAgentCfg, TienKungProWalkFlatEnvCfg
-from legged_lab.envs.tienkung_pro.run_cfg import TienKungProRunAgentCfg, TienKungProRunFlatEnvCfg
-
-
-
 from legged_lab.utils.task_registry import task_registry
 
 task_registry.register("lite_walk", TienKungEnv, TienKungWalkFlatEnvCfg, TienKungWalkAgentCfg)
 task_registry.register("lite_run", TienKungEnv, TienKungRunFlatEnvCfg, TienKungRunAgentCfg)
-
-task_registry.register("pro_walk", TienKungProEnv, TienKungProWalkFlatEnvCfg, TienKungProWalkAgentCfg)
-task_registry.register("pro_run", TienKungProEnv, TienKungProRunFlatEnvCfg, TienKungProRunAgentCfg)
 # task_registry.register("lite_run", TienKungEnv, TienKungRunFlatEnvCfg, TienKungRunAgentCfg)
 # task_registry.register(
 #     "walk_with_sensor", TienKungEnv, TienKungWalkWithSensorFlatEnvCfg, TienKungWalkWithSensorAgentCfg
