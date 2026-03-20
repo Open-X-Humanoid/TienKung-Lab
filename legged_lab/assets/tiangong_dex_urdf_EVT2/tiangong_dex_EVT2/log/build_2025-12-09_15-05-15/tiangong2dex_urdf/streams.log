@@ -1,0 +1,137 @@
+[0.005s] Invoking command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake /home/ps/develop/evt/tiangong2dex_urdf -DCMAKE_INSTALL_PREFIX=/home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf
+[0.043s] [0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.043s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.044s]   CMake.
+[0.044s] 
+[0.044s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.044s]   to tell CMake that the project requires at least <min> but has been updated
+[0.044s]   to work with policies introduced by <max> or earlier.
+[0.044s] 
+[0.044s] [0m
+[0.071s] -- The C compiler identification is GNU 10.5.0
+[0.105s] -- The CXX compiler identification is GNU 10.5.0
+[0.110s] -- Detecting C compiler ABI info
+[0.139s] -- Detecting C compiler ABI info - done
+[0.148s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.148s] -- Detecting C compile features
+[0.149s] -- Detecting C compile features - done
+[0.157s] -- Detecting CXX compiler ABI info
+[0.193s] -- Detecting CXX compiler ABI info - done
+[0.202s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.203s] -- Detecting CXX compile features
+[0.203s] -- Detecting CXX compile features - done
+[0.208s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.294s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter
+[0.342s] -- Found ament_lint_auto: 0.12.14 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.387s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[0.387s] -- Configured cppcheck include dirs: 
+[0.387s] -- Configured cppcheck exclude dirs and/or files: 
+[0.388s] -- Added test 'flake8' to check Python code syntax and style conventions
+[0.390s] -- Added test 'lint_cmake' to check CMake code style
+[0.391s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[0.398s] -- Added test 'uncrustify' to check C / C++ code style
+[0.398s] -- Configured uncrustify additional arguments: 
+[0.399s] -- Added test 'xmllint' to check XML markup files
+[0.399s] -- Configuring done (0.4s)
+[0.401s] -- Generating done (0.0s)
+[0.402s] -- Build files have been written to: /home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf
+[0.404s] Invoked command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake /home/ps/develop/evt/tiangong2dex_urdf -DCMAKE_INSTALL_PREFIX=/home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf
+[0.405s] Invoking command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake --build /home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf -- -j32 -l32
+[0.452s] Invoked command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake --build /home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf -- -j32 -l32
+[0.487s] Invoking command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake --install /home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf
+[0.522s] -- Install configuration: ""
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/launch
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/launch/display.launch.py
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/launch/gazebo.launch.py
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/urdf
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/urdf/tiangong2dex.urdf.xacro
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/urdf/tiangong2dex.urdf
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes
+[0.522s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_roll_r_link.STL
+[0.523s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_front_link.STL
+[0.523s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/radar_head_link.STL
+[0.525s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/ankle_roll_r_link.STL
+[0.525s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_front_left_link.STL
+[0.525s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/waist_pitch_link.STL
+[0.533s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_roll_l_link.STL
+[0.533s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/wrist_pitch_l_link.STL
+[0.535s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/camera_head_link.STL
+[0.537s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_back_link.STL
+[0.537s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_yaw_l_link.STL
+[0.538s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/elbow_pitch_r_link.STL
+[0.539s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/waist_roll_link.STL
+[0.542s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_yaw_r_link.STL
+[0.544s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_front_right_link.STL
+[0.544s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/left_tcp_link.STL
+[0.545s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/ankle_pitch_r_link.STL
+[0.545s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_pitch_r_link.STL
+[0.546s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_back_right_link.STL
+[0.546s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/right_tcp_link.STL
+[0.546s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/RGB_head_back_left_link.STL
+[0.546s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_roll_l_link.STL
+[0.547s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/elbow_pitch_l_link.STL
+[0.548s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_pitch_l_link.STL
+[0.549s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/knee_pitch_r_link.STL
+[0.550s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_pitch_r_link.STL
+[0.551s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_yaw_l_link.STL
+[0.553s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_pitch_l_link.STL
+[0.554s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/head_yaw_link.STL
+[0.554s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/elbow_yaw_l_link.STL
+[0.555s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/elbow_yaw_r_link.STL
+[0.555s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/wrist_roll_r_link.STL
+[0.556s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/pelvis.STL
+[0.558s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/hip_roll_r_link.STL
+[0.558s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/camera_body_front_link.STL
+[0.561s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/ankle_roll_l_link.STL
+[0.562s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/imu_link.STL
+[0.562s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/wrist_pitch_r_link.STL
+[0.563s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/knee_pitch_l_link.STL
+[0.565s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/ankle_pitch_l_link.STL
+[0.565s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/shoulder_yaw_r_link.STL
+[0.566s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/wrist_roll_l_link.STL
+[0.566s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes/waist_yaw_link.STL
+[0.568s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand
+[0.568s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_thumb_3.STL
+[0.568s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_little_1.STL
+[0.568s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_ring_2.STL
+[0.568s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_little_2.STL
+[0.569s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_ring_1.STL
+[0.569s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_index_2.STL
+[0.569s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_middle_1.STL
+[0.569s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_middle_1.STL
+[0.569s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_thumb_3.STL
+[0.570s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_thumb_4.STL
+[0.570s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_thumb_1.STL
+[0.570s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/L_base_link.STL
+[0.571s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_thumb_2.STL
+[0.572s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_index_1.STL
+[0.572s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_ring_1.STL
+[0.572s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_index_2.STL
+[0.572s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_index_1.STL
+[0.572s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_thumb_2.STL
+[0.573s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_ring_2.STL
+[0.573s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_little_1.STL
+[0.573s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_thumb_1.STL
+[0.573s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/R_base_link.STL
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_little_2.STL
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_middle_2.STL
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/right_thumb_4.STL
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/meshes_hand/left_middle_2.STL
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/config
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/config/display.rviz
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/ament_index/resource_index/package_run_dependencies/tiangong2dex_urdf
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/ament_index/resource_index/parent_prefix_path/tiangong2dex_urdf
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/environment/ament_prefix_path.sh
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/environment/ament_prefix_path.dsv
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/environment/path.sh
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/environment/path.dsv
+[0.574s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/local_setup.bash
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/local_setup.sh
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/local_setup.zsh
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/local_setup.dsv
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/package.dsv
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/ament_index/resource_index/packages/tiangong2dex_urdf
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/cmake/tiangong2dex_urdfConfig.cmake
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/cmake/tiangong2dex_urdfConfig-version.cmake
+[0.575s] -- Installing: /home/ps/develop/evt/tiangong2dex_urdf/install/tiangong2dex_urdf/share/tiangong2dex_urdf/package.xml
+[0.576s] Invoked command in '/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /home/ps/.local/bin/cmake --install /home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf

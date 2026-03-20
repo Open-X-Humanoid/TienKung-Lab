@@ -228,6 +228,7 @@ class AMPPPO:
         mean_grad_pen_loss = 0
         mean_policy_pred = 0
         mean_expert_pred = 0
+        mean_mirror_loss = 0
         # -- RND loss
         if self.rnd:
             mean_rnd_loss = 0
@@ -408,7 +409,8 @@ class AMPPPO:
                     loss += self.symmetry["mirror_loss_coeff"] * symmetry_loss
                 else:
                     symmetry_loss = symmetry_loss.detach()
-
+                
+                
             # Random Network Distillation loss
             if self.rnd:
                 # predict the embedding and the target
@@ -498,6 +500,7 @@ class AMPPPO:
             "value_function": mean_value_loss,
             "surrogate": mean_surrogate_loss,
             "entropy": mean_entropy,
+            "mirror" : mean_mirror_loss,
             "amp": mean_amp_loss,
             "amp_grad_pen": mean_grad_pen_loss,
             "amp_policy_pred": mean_policy_pred,

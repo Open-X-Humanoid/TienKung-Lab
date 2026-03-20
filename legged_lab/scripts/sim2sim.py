@@ -35,8 +35,8 @@ class SimToSimCfg:
 
     class sim:
         sim_duration = 100.0
-        num_action = 20
-        num_obs_per_step = 75
+        num_action = 23
+        num_obs_per_step = 84
         actor_obs_history_length = 10
         dt = 0.005
         decimation = 4
@@ -66,6 +66,7 @@ class MujocoRunner:
     def __init__(self, cfg: SimToSimCfg, policy_path, model_path):
         self.cfg = cfg
         network_path = policy_path
+        # breakpoint()
         self.model = mujoco.MjModel.from_xml_path(model_path)
         self.model.opt.timestep = self.cfg.sim.dt
 
@@ -82,7 +83,7 @@ class MujocoRunner:
         self.dof_vel = np.zeros(self.cfg.sim.num_action)
         self.action = np.zeros(self.cfg.sim.num_action)
         self.default_dof_pos = np.array(
-            [0, -0.5, 0, 1.0, -0.5, 0, 0, -0.5, 0, 1.0, -0.5, 0, 0, 0.1, 0.0, -0.3, 0, -0.1, 0.0, -0.3]
+            [0, -0.5, 0, 1.0, -0.5, 0, 0, -0.5, 0, 1.0, -0.5, 0, 0, 0, 0, 0, 0.2, 0.0, -0.3, 0, -0.2, 0.0, -0.3]
         )
         self.episode_length_buf = 0
         self.gait_phase = np.zeros(2)
@@ -91,48 +92,14 @@ class MujocoRunner:
         self.phase_offset = np.array([self.cfg.robot.gait_phase_offset_l, self.cfg.robot.gait_phase_offset_r])
 
         self.mujoco_to_isaac_idx = [
-            0,  # hip_roll_l_joint
-            6,  # hip_roll_r_joint
-            12,  # shoulder_pitch_l_joint
-            16,  # shoulder_pitch_r_joint
-            1,  # hip_pitch_l_joint
-            7,  # hip_pitch_r_joint
-            13,  # shoulder_roll_l_joint
-            17,  # shoulder_roll_r_joint
-            2,  # hip_yaw_l_joint
-            8,  # hip_yaw_r_joint
-            14,  # shoulder_yaw_l_joint
-            18,  # shoulder_yaw_r_joint
-            3,  # knee_pitch_l_joint
-            9,  # knee_pitch_r_joint
-            15,  # elbow_pitch_l_joint
-            19,  # elbow_pitch_r_joint
-            4,  # ankle_pitch_l_joint
-            10,  # ankle_pitch_r_joint
-            5,  # ankle_roll_l_joint
-            11,  # ankle_roll_r_joint
+  0, 6, 12, 1, 7, 13, 2, 8, 14, 3, 
+  9, 15, 19, 4, 10, 16, 20, 5, 11, 17, 
+  21, 18, 22
         ]
         self.isaac_to_mujoco_idx = [
-            0,  # hip_roll_l_joint
-            4,  # hip_pitch_l_joint
-            8,  # hip_yaw_l_joint
-            12,  # knee_pitch_l_joint
-            16,  # ankle_pitch_l_joint
-            18,  # ankle_roll_l_joint
-            1,  # hip_roll_r_joint
-            5,  # hip_pitch_r_joint
-            9,  # hip_yaw_r_joint
-            13,  # knee_pitch_r_joint
-            17,  # ankle_pitch_r_joint
-            19,  # ankle_roll_r_joint
-            2,  # shoulder_pitch_l_joint
-            6,  # shoulder_roll_l_joint
-            10,  # shoulder_yaw_l_joint
-            14,  # elbow_pitch_l_joint
-            3,  # shoulder_pitch_r_joint
-            7,  # shoulder_roll_r_joint
-            11,  # shoulder_yaw_r_joint
-            15,  # elbow_pitch_r_joint
+  0, 3, 6, 9, 13, 17, 1, 4, 7, 10, 
+  14, 18, 2, 5, 8, 11, 15, 19, 21, 12, 
+  16, 20, 22
         ]
         # Initial command vel
         self.command_vel = np.array([0.0, 0.0, 0.0])
@@ -147,8 +114,8 @@ class MujocoRunner:
         Returns:
             np.ndarray: Normalized and clipped observation history.
         """
-        self.dof_pos = self.data.sensordata[0:20]
-        self.dof_vel = self.data.sensordata[20:40]
+        self.dof_pos = self.data.sensordata[0:23]
+        self.dof_vel = self.data.sensordata[23:46]
 
         obs = np.concatenate(
             [
@@ -157,9 +124,10 @@ class MujocoRunner:
                     self.data.sensor("orientation").data[[1, 2, 3, 0]].astype(np.double), np.array([0, 0, -1])
                 ),  # 3
                 self.command_vel,  # 3
-                (self.dof_pos - self.default_dof_pos)[self.mujoco_to_isaac_idx],  # 20
-                self.dof_vel[self.mujoco_to_isaac_idx],  # 20
-                np.clip(self.action, -self.cfg.sim.clip_actions, self.cfg.sim.clip_actions),  # 20
+                # breakpoint()
+                (self.dof_pos - self.default_dof_pos)[self.mujoco_to_isaac_idx],  # 23
+                self.dof_vel[self.mujoco_to_isaac_idx],  # 23
+                np.clip(self.action, -self.cfg.sim.clip_actions, self.cfg.sim.clip_actions),  # 23
                 np.sin(2 * np.pi * self.gait_phase),  # 2
                 np.cos(2 * np.pi * self.gait_phase),  # 2
                 self.phase_ratio,  # 2
@@ -192,7 +160,7 @@ class MujocoRunner:
 
         while self.data.time < self.cfg.sim.sim_duration:
             self.obs_history = self.get_obs()
-            self.action[:] = self.policy(torch.tensor(self.obs_history, dtype=torch.float32)).detach().numpy()[:20]
+            self.action[:] = self.policy(torch.tensor(self.obs_history, dtype=torch.float32)).detach().numpy()[:23]
             self.action = np.clip(self.action, -self.cfg.sim.clip_actions, self.cfg.sim.clip_actions)
 
             for sim_update in range(self.cfg.sim.decimation):
@@ -294,7 +262,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model",
         type=str,
-        default=os.path.join(LEGGED_LAB_ROOT_DIR, "legged_lab/assets/tienkung2_lite/mjcf/tienkung.xml"),
+        default=os.path.join(LEGGED_LAB_ROOT_DIR, "legged_lab/assets/tiangong_dex_urdf_v31/tiangong_dex_urdf_v3/urdf/tiangong_dex.xml"),
         help="Path to model.xml",
     )
     parser.add_argument("--duration", type=float, default=100.0, help="Simulation duration in seconds")
@@ -329,7 +297,7 @@ if __name__ == "__main__":
         sim_cfg.robot.gait_air_ratio_r = 0.6
         sim_cfg.robot.gait_phase_offset_l = 0.6
         sim_cfg.robot.gait_phase_offset_r = 0.1
-        sim_cfg.robot.gait_cycle = 0.5
+        sim_cfg.robot.gait_cycle = 0.64
 
     runner = MujocoRunner(
         cfg=sim_cfg,

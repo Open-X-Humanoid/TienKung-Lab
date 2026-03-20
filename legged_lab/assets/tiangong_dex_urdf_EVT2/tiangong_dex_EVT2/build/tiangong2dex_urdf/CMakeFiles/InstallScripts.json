@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ps/develop/evt/tiangong2dex_urdf/build/tiangong2dex_urdf/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

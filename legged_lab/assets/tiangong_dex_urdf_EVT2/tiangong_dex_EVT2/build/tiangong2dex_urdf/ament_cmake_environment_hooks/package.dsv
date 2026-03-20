@@ -1,0 +1,4 @@
+source;share/tiangong2dex_urdf/local_setup.bash
+source;share/tiangong2dex_urdf/local_setup.dsv
+source;share/tiangong2dex_urdf/local_setup.sh
+source;share/tiangong2dex_urdf/local_setup.zsh

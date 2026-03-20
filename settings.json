@@ -1,0 +1,20 @@
+{
+    "python.pythonPath": "/home/ps/anaconda3/envs/rl-lab/bin/python",
+    "python.analysis.extraPaths": [
+        "/home/ps/anaconda3/envs/rl-lab/lib/python3.10/site-packages",
+        "${workspaceFolder}/legged_lab",
+        "/home/ps/lab/IsaacLab/source/isaaclab_tasks",
+        "/home/ps/lab/IsaacLab/source/isaaclab_mimic",
+        "/home/ps/lab/IsaacLab/source/extensions",
+        "/home/ps/lab/IsaacLab/source/isaaclab_assets",
+        "/home/ps/lab/IsaacLab/source/isaaclab_rl",
+        "/home/ps/lab/IsaacLab/source/isaaclab",
+        "/home/ps/lab/IsaacLab/source/isaaclab"
+    ],
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}
+

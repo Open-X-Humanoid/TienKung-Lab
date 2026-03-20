@@ -1,0 +1,8 @@
+source;share/tiangong2dex_urdf/hook/cmake_prefix_path.ps1
+source;share/tiangong2dex_urdf/hook/cmake_prefix_path.dsv
+source;share/tiangong2dex_urdf/hook/cmake_prefix_path.sh
+source;share/tiangong2dex_urdf/local_setup.bash
+source;share/tiangong2dex_urdf/local_setup.dsv
+source;share/tiangong2dex_urdf/local_setup.ps1
+source;share/tiangong2dex_urdf/local_setup.sh
+source;share/tiangong2dex_urdf/local_setup.zsh

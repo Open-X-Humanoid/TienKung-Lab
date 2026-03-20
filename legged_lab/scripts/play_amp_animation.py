@@ -53,7 +53,10 @@ from legged_lab.utils.cli_args import update_rsl_rl_cfg
 
 def play_amp_animation():
     env_class_name = args_cli.task
-    env_cfg, agent_cfg = task_registry.get_cfgs(env_class_name)
+    env_cfg_, agent_cfg_ = task_registry.get_cfgs(env_class_name)
+    
+    env_cfg = env_cfg_()
+    agent_cfg = agent_cfg_()
 
     env_cfg.noise.add_noise = False
     env_cfg.domain_rand.events.push_robot = None

@@ -1,0 +1,387 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"ament_index_register_resource",
+			"ament_cmake_environment_generate_package_run_dependencies_marker",
+			"include",
+			"ament_execute_extensions",
+			"ament_package",
+			"ament_cmake_environment_generate_parent_prefix_path_marker",
+			"ament_environment_hooks",
+			"ament_generate_package_environment",
+			"ament_index_register_package",
+			"_ament_package"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_register_resource.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/environment/ament_cmake_environment_package_hook.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/ament_environment_hooks.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/ament_cmake_environment_hooks_package_hook.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/ament_generate_package_environment.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_register_package.cmake",
+			"/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_cmake_index_package_hook.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 27,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 32,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 4,
+				"line" : 66,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"file" : 2,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 47,
+				"parent" : 5
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 29,
+				"parent" : 6
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 105,
+				"parent" : 7
+			},
+			{
+				"command" : 6,
+				"file" : 2,
+				"line" : 48,
+				"parent" : 5
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 43,
+				"parent" : 9
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 105,
+				"parent" : 10
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"file" : 6,
+				"parent" : 12
+			},
+			{
+				"command" : 7,
+				"file" : 6,
+				"line" : 20,
+				"parent" : 13
+			},
+			{
+				"command" : 0,
+				"file" : 5,
+				"line" : 70,
+				"parent" : 14
+			},
+			{
+				"command" : 0,
+				"file" : 5,
+				"line" : 87,
+				"parent" : 14
+			},
+			{
+				"command" : 0,
+				"file" : 5,
+				"line" : 70,
+				"parent" : 14
+			},
+			{
+				"command" : 0,
+				"file" : 5,
+				"line" : 87,
+				"parent" : 14
+			},
+			{
+				"command" : 8,
+				"file" : 6,
+				"line" : 26,
+				"parent" : 13
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 91,
+				"parent" : 19
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 91,
+				"parent" : 19
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 91,
+				"parent" : 19
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 107,
+				"parent" : 19
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 119,
+				"parent" : 19
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"file" : 9,
+				"parent" : 25
+			},
+			{
+				"command" : 9,
+				"file" : 9,
+				"line" : 16,
+				"parent" : 26
+			},
+			{
+				"command" : 1,
+				"file" : 8,
+				"line" : 29,
+				"parent" : 27
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 105,
+				"parent" : 28
+			},
+			{
+				"command" : 10,
+				"file" : 4,
+				"line" : 68,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 4,
+				"line" : 150,
+				"parent" : 30
+			},
+			{
+				"command" : 0,
+				"file" : 4,
+				"line" : 157,
+				"parent" : 30
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"launch",
+				"urdf",
+				"meshes",
+				"meshes_hand",
+				"config"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "share/ament_index/resource_index/package_run_dependencies",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/tiangong2dex_urdf"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "share/ament_index/resource_index/parent_prefix_path",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/tiangong2dex_urdf"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 15,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf/environment",
+			"paths" : 
+			[
+				"/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 16,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf/environment",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/ament_prefix_path.dsv"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 17,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf/environment",
+			"paths" : 
+			[
+				"/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 18,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf/environment",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/path.dsv"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 20,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/local_setup.bash"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 21,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/local_setup.sh"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 22,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/local_setup.zsh"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 23,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/local_setup.dsv"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 24,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_environment_hooks/package.dsv"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 29,
+			"component" : "Unspecified",
+			"destination" : "share/ament_index/resource_index/packages",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_index/share/ament_index/resource_index/packages/tiangong2dex_urdf"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 31,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf/cmake",
+			"paths" : 
+			[
+				"build/tiangong2dex_urdf/ament_cmake_core/tiangong2dex_urdfConfig.cmake",
+				"build/tiangong2dex_urdf/ament_cmake_core/tiangong2dex_urdfConfig-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 32,
+			"component" : "Unspecified",
+			"destination" : "share/tiangong2dex_urdf",
+			"paths" : 
+			[
+				"package.xml"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}

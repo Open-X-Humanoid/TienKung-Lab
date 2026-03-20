@@ -59,16 +59,20 @@ def play():
     env_cfg: BaseEnvCfg  # noqa:F405
 
     env_class_name = args_cli.task
-    env_cfg, agent_cfg = task_registry.get_cfgs(env_class_name)
+    env_cfg_, agent_cfg_ = task_registry.get_cfgs(env_class_name)
 
+    env_cfg = env_cfg_()
+    agent_cfg = agent_cfg_()
+    
     env_cfg.noise.add_noise = False
-    env_cfg.domain_rand.events.push_robot = None
+    env_cfg.domain_rand.events = None
     env_cfg.scene.max_episode_length_s = 40.0
     env_cfg.scene.num_envs = 50
     env_cfg.scene.env_spacing = 2.5
     env_cfg.commands.rel_standing_envs = 0.0
-    env_cfg.commands.ranges.lin_vel_x = (1.0, 1.0)
+    env_cfg.commands.ranges.lin_vel_x = (0.0, 1.0)
     env_cfg.commands.ranges.lin_vel_y = (0.0, 0.0)
+    env_cfg.commands.ranges.ang_vel_z = (0.0, 0.0)
     env_cfg.scene.height_scanner.drift_range = (0.0, 0.0)
 
     env_cfg.scene.terrain_generator = None

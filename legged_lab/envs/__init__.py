@@ -23,6 +23,7 @@ from legged_lab.envs.tienkung.run_with_sensor_cfg import (
     TienKungRunWithSensorAgentCfg,
     TienKungRunWithSensorFlatEnvCfg,
 )
+from legged_lab.envs.dex.dex_env import DexEnv
 from legged_lab.envs.tienkung.tienkung_env import TienKungEnv
 from legged_lab.envs.tienkung.walk_cfg import (
     TienKungWalkAgentCfg,
@@ -32,13 +33,30 @@ from legged_lab.envs.tienkung.walk_with_sensor_cfg import (
     TienKungWalkWithSensorAgentCfg,
     TienKungWalkWithSensorFlatEnvCfg,
 )
+
+from legged_lab.envs.dex.dex_env import DexEnv
+from legged_lab.envs.dex.run_cfg import DexRunAgentCfg, DexRunFlatEnvCfg
+from legged_lab.envs.dex.walk_cfg import DexWalkAgentCfg, DexWalkFlatEnvCfg
+
+from legged_lab.envs.tienkung_pro.tienkung_env import TienKungProEnv
+from legged_lab.envs.tienkung_pro.walk_cfg import TienKungProWalkAgentCfg, TienKungProWalkFlatEnvCfg
+from legged_lab.envs.tienkung_pro.run_cfg import TienKungProRunAgentCfg, TienKungProRunFlatEnvCfg
+
+
+
 from legged_lab.utils.task_registry import task_registry
 
-task_registry.register("walk", TienKungEnv, TienKungWalkFlatEnvCfg(), TienKungWalkAgentCfg())
-task_registry.register("run", TienKungEnv, TienKungRunFlatEnvCfg(), TienKungRunAgentCfg())
-task_registry.register(
-    "walk_with_sensor", TienKungEnv, TienKungWalkWithSensorFlatEnvCfg(), TienKungWalkWithSensorAgentCfg()
-)
-task_registry.register(
-    "run_with_sensor", TienKungEnv, TienKungRunWithSensorFlatEnvCfg(), TienKungRunWithSensorAgentCfg()
-)
+task_registry.register("lite_walk", TienKungEnv, TienKungWalkFlatEnvCfg, TienKungWalkAgentCfg)
+task_registry.register("lite_run", TienKungEnv, TienKungRunFlatEnvCfg, TienKungRunAgentCfg)
+
+task_registry.register("pro_walk", TienKungProEnv, TienKungProWalkFlatEnvCfg, TienKungProWalkAgentCfg)
+task_registry.register("pro_run", TienKungProEnv, TienKungProRunFlatEnvCfg, TienKungProRunAgentCfg)
+# task_registry.register("lite_run", TienKungEnv, TienKungRunFlatEnvCfg, TienKungRunAgentCfg)
+# task_registry.register(
+#     "walk_with_sensor", TienKungEnv, TienKungWalkWithSensorFlatEnvCfg, TienKungWalkWithSensorAgentCfg
+# )
+# task_registry.register(
+#     "run_with_sensor", TienKungEnv, TienKungRunWithSensorFlatEnvCfg, TienKungRunWithSensorAgentCfg
+# )
+task_registry.register("dex_walk", DexEnv, DexWalkFlatEnvCfg, DexWalkAgentCfg)
+task_registry.register("dex_run", DexEnv, DexRunFlatEnvCfg, DexRunAgentCfg)

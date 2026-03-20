@@ -58,13 +58,24 @@ class GaitCfg:
     gait_phase_offset_l: float = 0.38
     gait_phase_offset_r: float = 0.88
     gait_cycle: float = 0.85
+    # gait_cycle_upper: float = 1.00
+    # gait_cycle_lower: float = 0.85
 
+@configclass
+class TienkungEventCfg(EventCfg):
+    """TienKung 环境的事件配置"""
+    
+    # 继承所有父类属性，并添加新的
+    randomize_pd_gains: EventTerm = None
+    randomize_apply_external_force_torque:EventTerm = None
+    randomize_rigid_body_com:EventTerm = None
+    randomize_joint_params:EventTerm = None
 
 @configclass
 class LiteRewardCfg:
-    track_lin_vel_xy_exp = RewTerm(func=mdp.track_lin_vel_xy_yaw_frame_exp, weight=1.0, params={"std": 0.5})
-    track_ang_vel_z_exp = RewTerm(func=mdp.track_ang_vel_z_world_exp, weight=1.0, params={"std": 0.5})
-    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-1.0)
+    track_lin_vel_xy_exp = RewTerm(func=mdp.track_lin_vel_xy_yaw_frame_exp, weight=4.0, params={"std": 0.5})
+    track_ang_vel_z_exp = RewTerm(func=mdp.track_ang_vel_z_world_exp, weight=2.0, params={"std": 0.5})
+    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-0.5)
     ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
     energy = RewTerm(func=mdp.energy, weight=-1e-3)
     dof_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=-2.5e-7)
@@ -79,14 +90,17 @@ class LiteRewardCfg:
             "threshold": 1.0,
         },
     )
+    torso_ang_vel_xy_l2 = RewTerm(func=mdp.body_ang_vel_xy_l2, 
+                                  params={"asset_cfg": SceneEntityCfg("robot", body_names="pelvis")},
+                                  weight=-0.05)
     body_orientation_l2 = RewTerm(
-        func=mdp.body_orientation_l2, params={"asset_cfg": SceneEntityCfg("robot", body_names="pelvis")}, weight=-2.0
+        func=mdp.body_orientation_l2, params={"asset_cfg": SceneEntityCfg("robot", body_names="pelvis")}, weight=-1.0
     )
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.0)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-0.5)
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-50.0)
     feet_slide = RewTerm(
         func=mdp.feet_slide,
-        weight=-0.25,
+        weight=-1.0,
         params={
             "sensor_cfg": SceneEntityCfg("contact_sensor", body_names="ankle_roll.*"),
             "asset_cfg": SceneEntityCfg("robot", body_names="ankle_roll.*"),
@@ -97,10 +111,11 @@ class LiteRewardCfg:
         weight=-3e-3,
         params={
             "sensor_cfg": SceneEntityCfg("contact_sensor", body_names="ankle_roll.*"),
-            "threshold": 500,
+            "threshold": 1000,
             "max_reward": 400,
         },
     )
+
     feet_too_near = RewTerm(
         func=mdp.feet_too_near_humanoid,
         weight=-2.0,
@@ -148,28 +163,116 @@ class LiteRewardCfg:
         },
     )
 
-    gait_feet_frc_perio = RewTerm(func=mdp.gait_feet_frc_perio, weight=1.0, params={"delta_t": 0.02})
-    gait_feet_spd_perio = RewTerm(func=mdp.gait_feet_spd_perio, weight=1.0, params={"delta_t": 0.02})
-    gait_feet_frc_support_perio = RewTerm(func=mdp.gait_feet_frc_support_perio, weight=0.6, params={"delta_t": 0.02})
+    gait_feet_frc_perio = RewTerm(func=mdp.gait_feet_frc_perio, weight=2.0, params={"delta_t": 0.02})
+    gait_feet_spd_perio = RewTerm(func=mdp.gait_feet_spd_perio, weight=2.0, params={"delta_t": 0.02})
+    gait_feet_frc_support_perio = RewTerm(func=mdp.gait_feet_frc_support_perio, weight=1.5, params={"delta_t": 0.02})
 
     ankle_torque = RewTerm(func=mdp.ankle_torque, weight=-0.0005)
     ankle_action = RewTerm(func=mdp.ankle_action, weight=-0.001)
-    hip_roll_action = RewTerm(func=mdp.hip_roll_action, weight=-1.0)
+    hip_roll_action = RewTerm(func=mdp.hip_roll_action, weight=-2.0)
     hip_yaw_action = RewTerm(func=mdp.hip_yaw_action, weight=-1.0)
-    feet_y_distance = RewTerm(func=mdp.feet_y_distance, weight=-2.0)
+    feet_y_distance = RewTerm(func=mdp.feet_y_distance, weight=-4.0)
+    hip_roll_vel = RewTerm(func=mdp.hip_roll_vel, weight=-1.0)
+    alive_reward = RewTerm(func=mdp.alive_reward, weight=0.5)
 
+    stand_still = RewTerm(
+        func=mdp.stand_still,
+        weight=-0.5,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    # "shoulder_roll_.*_joint",
+                    "shoulder_yaw_.*_joint",
+                    "shoulder_pitch_.*_joint",
+                    "elbow_pitch_.*_joint",
+                    # "waist_yaw_joint",
+                    # "waist_roll_joint",
+                    # "waist_pitch_joint",
+                    "hip_pitch_.*_joint",
+                    "hip_roll_.*_joint",
+                    "hip_yaw_.*_joint",
+                    "knee_pitch_.*_joint",
+                    "ankle_pitch_.*_joint",
+                    "ankle_roll_.*_joint",
+                ],
+            ),
+            "zero_threshold": 0.2,  # 0.1 -> 0.2: wider deadband for smoother transition
+        },
+    )
+
+    stand_still_exp = RewTerm(
+        func=mdp.stand_still_exp,
+        weight=7.0,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    # "shoulder_roll_.*_joint",
+                    "shoulder_yaw_.*_joint",
+                    "shoulder_pitch_.*_joint",
+                    "elbow_pitch_.*_joint",
+                    # "waist_yaw_joint",
+                    # "waist_roll_joint",
+                    # "waist_pitch_joint",
+                    "hip_pitch_.*_joint",
+                    "hip_roll_.*_joint",
+                    "hip_yaw_.*_joint",
+                    "knee_pitch_.*_joint",
+                    "ankle_pitch_.*_joint",
+                    "ankle_roll_.*_joint",
+                ],
+            ),
+            "zero_threshold": 0.2,  # 0.1 -> 0.2: wider deadband for smoother transition
+        },
+    )
+    
+    stand_still_vel = RewTerm(
+        func=mdp.stand_still_vel,
+        weight=-0.05,
+    )
+    stand_still_feet_motion_penalty = RewTerm(
+        func=mdp.stand_still_feet_motion_penalty,
+        weight=-0.5,
+    )
+    
+    # stand_still_base_ang_acc = RewTerm(
+    #     func=mdp.stand_still_base_ang_acc,
+    #     weight=-0.5,  # Negative weight to penalize angular acceleration
+    #     params={
+    #         "asset_cfg": SceneEntityCfg("robot", body_names="pelvis"),
+    #         "zero_threshold": 0.2,
+    #     },
+    # )
+    stand_still_double_support = RewTerm(
+        func=mdp.stand_still_double_support,
+        weight=0.5,  # Positive weight to reward double support
+        params={
+            "sensor_cfg": SceneEntityCfg("contact_sensor", body_names="ankle_roll.*"),
+            "zero_threshold": 0.2,
+            "contact_threshold": 2.0,
+        },
+    )
+    # stand_still_body_lin_vel = RewTerm(
+    #     func=mdp.stand_still_body_lin_vel,
+    #     weight=-1.0,  # Penalize linear velocity during standing
+    #     params={
+    #         "asset_cfg": SceneEntityCfg("robot"),
+    #         "zero_threshold": 0.2,
+    #     },
+    # )
 
 @configclass
 class TienKungWalkFlatEnvCfg:
     amp_motion_files_display = ["legged_lab/envs/tienkung/datasets/motion_visualization/walk.txt"]
     device: str = "cuda:0"
     scene: BaseSceneCfg = BaseSceneCfg(
-        max_episode_length_s=20.0,
+        max_episode_length_s=10.0,
         num_envs=4096,
         env_spacing=2.5,
         robot=TIENKUNG2LITE_CFG,
         terrain_type="generator",
-        terrain_generator=GRAVEL_TERRAINS_CFG,
+        terrain_generator=ROUGH_TERRAINS_CFG,
         # terrain_type="plane",
         # terrain_generator= None,
         max_init_terrain_level=5,
@@ -207,14 +310,14 @@ class TienKungWalkFlatEnvCfg:
         height_scan_offset=0.5,
     )
     commands: CommandsCfg = CommandsCfg(
-        resampling_time_range=(10.0, 10.0),
-        rel_standing_envs=0.2,
+        resampling_time_range=(8.0, 12.0),
+        rel_standing_envs=0.4,
         rel_heading_envs=1.0,
         heading_command=True,
         heading_control_stiffness=0.5,
         debug_vis=True,
         ranges=CommandRangesCfg(
-            lin_vel_x=(-0.6, 1.0), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-1.57, 1.57), heading=(-math.pi, math.pi)
+            lin_vel_x=(-0.6, 1.2), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-1.57, 1.57), heading=(-math.pi, math.pi)
         ),
     )
     noise: NoiseCfg = NoiseCfg(
@@ -229,7 +332,7 @@ class TienKungWalkFlatEnvCfg:
         ),
     )
     domain_rand: DomainRandCfg = DomainRandCfg(
-        events=EventCfg(
+        events=TienkungEventCfg(
             physics_material=EventTerm(
                 func=mdp.randomize_rigid_body_material,
                 mode="startup",
@@ -279,10 +382,55 @@ class TienKungWalkFlatEnvCfg:
                 interval_range_s=(10.0, 15.0),
                 params={"velocity_range": {"x": (-1.0, 1.0), "y": (-1.0, 1.0)}},
             ),
+            randomize_pd_gains=EventTerm(
+                func=mdp.randomize_actuator_gains,
+                mode="reset",  # apply after each scene.reset so default PD isn't restored
+                params={
+                    "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
+                    "stiffness_distribution_params": (0.75, 1.25),
+                    "damping_distribution_params": (0.75, 1.25),
+                    "operation": "scale",
+                    "distribution": "uniform"
+                },
+            ),
+            randomize_apply_external_force_torque = EventTerm(
+                func=mdp.apply_external_force_torque,
+                mode="reset",
+                params={
+                    "asset_cfg": SceneEntityCfg("robot", body_names="pelvis"),
+                    "force_range": (-20.0, 20.0),
+                    "torque_range": (-5.0, 5.0),
+                },
+            ),
+            randomize_joint_params = EventTerm(
+            func=mdp.randomize_joint_parameters,
+            mode="startup",
+            params={
+                "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
+                # 关节摩擦
+                "friction_distribution_params": (0.001, 0.6),  # ← joint_friction_range
+                # 关节 armature（惯量）
+                "armature_distribution_params": (0.002, 0.060), # ← joint_armature_range
+                "operation": "abs",  # 绝对值设置
+                "distribution": "uniform",
+                },
+            ),
+            randomize_rigid_body_com = EventTerm(
+                func=mdp.randomize_rigid_body_com,
+                mode="startup",
+                params={
+                    "asset_cfg": SceneEntityCfg("robot", body_names=["pelvis"]),
+                    "com_range": {
+                    "x": (-0.05, 0.05),  
+                    "y": (-0.05, 0.05),  
+                    "z": (0.0, 0.0),  
+                    },
+                },
+            )
         ),
         action_delay=ActionDelayCfg(enable=False, params={"max_delay": 5, "min_delay": 0}),
     )
-    sim: SimCfg = SimCfg(dt=0.005, decimation=4, physx=PhysxCfg(gpu_max_rigid_patch_count=10 * 2**15))
+    sim: SimCfg = SimCfg(dt=0.0025, decimation=4, physx=PhysxCfg(gpu_max_rigid_patch_count=10 * 2**15))
 
 
 @configclass
@@ -315,17 +463,23 @@ class TienKungWalkAgentCfg(RslRlOnPolicyRunnerCfg):
         desired_kl=0.01,
         max_grad_norm=1.0,
         normalize_advantage_per_mini_batch=False,
-        symmetry_cfg=None,  # RslRlSymmetryCfg()
+        symmetry_cfg =
+        RslRlSymmetryCfg(
+            use_data_augmentation=False,
+            use_mirror_loss=True,
+            mirror_loss_coeff=100,
+            data_augmentation_func=mdp.data_augmentation_func_g1,
+        ),
         rnd_cfg=None,  # RslRlRndCfg()
     )
     clip_actions = None
     save_interval = 100
     runner_class_name = "AmpOnPolicyRunner"
-    experiment_name = "walk"
+    experiment_name = "lite_walk"
     run_name = ""
     logger = "tensorboard"
-    neptune_project = "walk"
-    wandb_project = "walk"
+    neptune_project = "lite_walk"
+    wandb_project = "lite_walk"
     resume = False
     load_run = ".*"
     load_checkpoint = "model_.*.pt"

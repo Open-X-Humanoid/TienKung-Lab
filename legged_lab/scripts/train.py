@@ -64,15 +64,23 @@ def train():
     runner: OnPolicyRunner | AmpOnPolicyRunner
 
     env_class_name = args_cli.task
-    env_cfg, agent_cfg = task_registry.get_cfgs(env_class_name)
+    # 修正：接收配置类，而非直接用 cfg
+    env_cfg_cls, agent_cfg_cls = task_registry.get_cfgs(env_class_name)
     env_class = task_registry.get_task_class(env_class_name)
 
+    # 实例化配置类（关键！解决 scene 属性访问问题）
+    env_cfg = env_cfg_cls()
+    agent_cfg = agent_cfg_cls()
+
+    # 覆盖 num_envs 配置
     if args_cli.num_envs is not None:
         env_cfg.scene.num_envs = args_cli.num_envs
 
+    # 更新 RSL-RL 配置
     agent_cfg = update_rsl_rl_cfg(agent_cfg, args_cli)
     env_cfg.scene.seed = agent_cfg.seed
 
+    # 分布式训练配置
     if args_cli.distributed:
         env_cfg.sim.device = f"cuda:{app_launcher.local_rank}"
         agent_cfg.device = f"cuda:{app_launcher.local_rank}"
@@ -82,8 +90,10 @@ def train():
         env_cfg.scene.seed = seed
         agent_cfg.seed = seed
 
+    # 创建环境实例
     env = env_class(env_cfg, args_cli.headless)
 
+    # 日志路径配置
     log_root_path = os.path.join("logs", agent_cfg.experiment_name)
     log_root_path = os.path.abspath(log_root_path)
     print(f"[INFO] Logging experiment in directory: {log_root_path}")
@@ -106,6 +116,7 @@ def train():
     dump_yaml(os.path.join(log_dir, "params", "agent.yaml"), agent_cfg)
 
     runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
+
 
 
 if __name__ == "__main__":

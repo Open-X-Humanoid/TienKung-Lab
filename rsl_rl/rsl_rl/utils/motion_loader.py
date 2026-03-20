@@ -24,7 +24,7 @@ import torch
 
 
 class AMPLoader:
-    JOINT_POS_SIZE = 20
+    JOINT_POS_SIZE = 20 # no elbow_yaw wrist_roll wrist_pitch DEX:23 2.0LITE:20
 
     JOINT_VEL_SIZE = 20
 
@@ -100,11 +100,11 @@ class AMPLoader:
             print(f"Preloading {num_preload_transitions} transitions")
             traj_idxs = self.weighted_traj_idx_sample_batch(num_preload_transitions)
             times = self.traj_time_sample_batch(traj_idxs)
-
+            # breakpoint()
             self.preloaded_s = self.get_full_frame_at_time_batch(traj_idxs, times)
             self.preloaded_s_next = self.get_full_frame_at_time_batch(traj_idxs, times + self.time_between_frames)
             print("Finished preloading")
-
+            # breakpoint()
         self.all_trajectories_full = torch.vstack(self.trajectories_full)
 
     def weighted_traj_idx_sample(self):

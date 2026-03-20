@@ -57,8 +57,17 @@ class GaitCfg:
     gait_air_ratio_r: float = 0.6
     gait_phase_offset_l: float = 0.6
     gait_phase_offset_r: float = 0.1
-    gait_cycle: float = 0.5
+    gait_cycle: float = 0.64
 
+@configclass
+class TienkungEventCfg(EventCfg):
+    """TienKung 环境的事件配置"""
+    
+    # 继承所有父类属性，并添加新的
+    randomize_pd_gains: EventTerm = None
+    randomize_apply_external_force_torque:EventTerm = None
+    randomize_rigid_body_com:EventTerm = None
+    randomize_joint_params: EventTerm = None
 
 @configclass
 class LiteRewardCfg:
@@ -169,7 +178,7 @@ class TienKungRunFlatEnvCfg:
         env_spacing=2.5,
         robot=TIENKUNG2LITE_CFG,
         terrain_type="generator",
-        terrain_generator=GRAVEL_TERRAINS_CFG,
+        terrain_generator= ROUGH_TERRAINS_CFG,
         # terrain_type="plane",
         # terrain_generator= None,
         max_init_terrain_level=5,
@@ -214,7 +223,7 @@ class TienKungRunFlatEnvCfg:
         heading_control_stiffness=0.5,
         debug_vis=True,
         ranges=CommandRangesCfg(
-            lin_vel_x=(-0.6, 1.0), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-1.57, 1.57), heading=(-math.pi, math.pi)
+            lin_vel_x=(-0.6, 2.5), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-1.57, 1.57), heading=(-math.pi, math.pi)
         ),
     )
     noise: NoiseCfg = NoiseCfg(
@@ -229,7 +238,7 @@ class TienKungRunFlatEnvCfg:
         ),
     )
     domain_rand: DomainRandCfg = DomainRandCfg(
-        events=EventCfg(
+        events=TienkungEventCfg(
             physics_material=EventTerm(
                 func=mdp.randomize_rigid_body_material,
                 mode="startup",
@@ -279,6 +288,51 @@ class TienKungRunFlatEnvCfg:
                 interval_range_s=(10.0, 15.0),
                 params={"velocity_range": {"x": (-1.0, 1.0), "y": (-1.0, 1.0)}},
             ),
+            randomize_pd_gains=EventTerm(
+                func=mdp.randomize_actuator_gains,
+                mode="reset",  # apply after each scene.reset so default PD isn't restored
+                params={
+                    "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
+                    "stiffness_distribution_params": (0.75, 1.25),
+                    "damping_distribution_params": (0.75, 1.25),
+                    "operation": "scale",
+                    "distribution": "uniform"
+                },
+            ),
+            randomize_apply_external_force_torque = EventTerm(
+                func=mdp.apply_external_force_torque,
+                mode="reset",
+                params={
+                    "asset_cfg": SceneEntityCfg("robot", body_names="pelvis"),
+                    "force_range": (-20.0, 20.0),
+                    "torque_range": (-5.0, 5.0),
+                },
+            ),
+            randomize_joint_params=EventTerm(
+            func=mdp.randomize_joint_parameters,
+            mode="startup",
+            params={
+                "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
+                # 关节摩擦
+                "friction_distribution_params": (0.001, 0.6),  # ← joint_friction_range
+                # 关节 armature（惯量）
+                "armature_distribution_params": (0.002, 0.060), # ← joint_armature_range
+                "operation": "abs",  # 绝对值设置
+                "distribution": "uniform",
+                },
+            )
+        #     randomize_rigid_body_com = EventTerm(
+        #         func=mdp.randomize_rigid_body_com,
+        #         mode="reset",
+        #         params={
+        #             "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),    
+        #             "com_range": {
+        #             "x": (-0.05, 0.05),  
+        #             "y": (-0.05, 0.05),  
+        #             "z": (0.0, 0.0),  
+        #             },
+        #         },
+        #     )
         ),
         action_delay=ActionDelayCfg(enable=False, params={"max_delay": 5, "min_delay": 0}),
     )
@@ -315,17 +369,23 @@ class TienKungRunAgentCfg(RslRlOnPolicyRunnerCfg):
         desired_kl=0.01,
         max_grad_norm=1.0,
         normalize_advantage_per_mini_batch=False,
-        symmetry_cfg=None,  # RslRlSymmetryCfg()
+        symmetry_cfg=
+                RslRlSymmetryCfg(
+            use_data_augmentation=False,
+            use_mirror_loss=True,
+            mirror_loss_coeff=50,
+            data_augmentation_func=mdp.data_augmentation_func_g1,
+        ),
         rnd_cfg=None,  # RslRlRndCfg()
     )
     clip_actions = None
     save_interval = 100
     runner_class_name = "AmpOnPolicyRunner"
-    experiment_name = "run"
+    experiment_name = "lite_run"
     run_name = ""
     logger = "tensorboard"
-    neptune_project = "run"
-    wandb_project = "run"
+    neptune_project = "lite_run"
+    wandb_project = "lite_run"
     resume = False
     load_run = ".*"
     load_checkpoint = "model_.*.pt"

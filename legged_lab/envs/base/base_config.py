@@ -105,6 +105,7 @@ class CommandsCfg:
     heading_control_stiffness: float = 0.5
     debug_vis: bool = True
     ranges: CommandRangesCfg = CommandRangesCfg()
+    command_curriculum_cfg: dict | None = None
 
 
 @configclass
