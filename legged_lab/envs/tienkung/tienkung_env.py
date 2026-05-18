@@ -524,16 +524,15 @@ class TienKungEnv(VecEnv):
             actor_obs, _ = self.compute_current_observations()
             noise_vec = torch.zeros_like(actor_obs[0])
             noise_scales = self.cfg.noise.noise_scales
-            noise_vec[:3] = noise_scales.lin_vel * self.obs_scales.lin_vel
-            noise_vec[3:6] = noise_scales.ang_vel * self.obs_scales.ang_vel
-            noise_vec[6:9] = noise_scales.projected_gravity * self.obs_scales.projected_gravity
-            noise_vec[9:12] = 0
-            noise_vec[12 : 12 + self.num_actions] = noise_scales.joint_pos * self.obs_scales.joint_pos
-            noise_vec[12 + self.num_actions : 12 + self.num_actions * 2] = (
+            noise_vec[0:3] = noise_scales.ang_vel * self.obs_scales.ang_vel
+            noise_vec[3:6] = noise_scales.projected_gravity * self.obs_scales.projected_gravity
+            noise_vec[6:9] = 0.0
+            noise_vec[9 : 9 + self.num_actions] = noise_scales.joint_pos * self.obs_scales.joint_pos
+            noise_vec[9 + self.num_actions : 9 + self.num_actions * 2] = (
                 noise_scales.joint_vel * self.obs_scales.joint_vel
             )
-            noise_vec[12 + self.num_actions * 2 : 12 + self.num_actions * 3] = 0.0
-            noise_vec[12 + self.num_actions * 3 : 18 + self.num_actions * 3] = 0.0
+            noise_vec[9 + self.num_actions * 2 : 9 + self.num_actions * 3] = 0.0
+            noise_vec[9 + self.num_actions * 3 : 15 + self.num_actions * 3] = 0.0
             self.noise_scale_vec = noise_vec
 
             if self.cfg.scene.height_scanner.enable_height_scan:
