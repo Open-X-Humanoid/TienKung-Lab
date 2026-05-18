@@ -140,9 +140,7 @@ def body_force(
 ) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     reward = contact_sensor.data.net_forces_w[:, sensor_cfg.body_ids, 2].norm(dim=-1)
-    reward[reward < threshold] = 0
-    reward[reward > threshold] -= threshold
-    reward = reward.clamp(min=0, max=max_reward)
+    reward = (reward - threshold).clamp(min=0, max=max_reward)
     return reward
 
 
