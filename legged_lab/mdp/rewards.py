@@ -29,7 +29,7 @@ from isaaclab.sensors import ContactSensor
 
 if TYPE_CHECKING:
     from legged_lab.envs.base.base_env import BaseEnv
-    from legged_lab.envs.tienkung.tienkung_env import DexEnv
+    from legged_lab.envs.tienkung3.tienkung3_env import TienKung3Env
 
 def gaussian(x, value_at_1):
     scale = np.sqrt(-2 * np.log(value_at_1))
@@ -49,7 +49,7 @@ def tolerance(x, bounds=(0.0, 0.0), margin=0.1, value_at_margin=0.1):
 
     return value
 
-def episode_progress_gate(env: BaseEnv | DexEnv, threshold: float = 700.0) -> torch.Tensor:
+def episode_progress_gate(env: BaseEnv | TienKung3Env, threshold: float = 700.0) -> torch.Tensor:
     """
     Returns a per-env gate that activates once the mean episode length exceeds the threshold.
     """
@@ -68,7 +68,7 @@ def episode_progress_gate(env: BaseEnv | DexEnv, threshold: float = 700.0) -> to
     return gate_scalar * torch.ones_like(episode_lengths, dtype=torch.float)
 
 def track_lin_vel_xy_yaw_frame_exp(
-    env: BaseEnv | DexEnv, std: float, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: BaseEnv | TienKung3Env, std: float, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     vel_yaw = math_utils.quat_apply_inverse(
@@ -79,27 +79,46 @@ def track_lin_vel_xy_yaw_frame_exp(
 
 
 def track_ang_vel_z_world_exp(
-    env: BaseEnv | DexEnv, std: float, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: BaseEnv | TienKung3Env, std: float, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     ang_vel_error = torch.square(env.command_generator.command[:, 2] - asset.data.root_ang_vel_w[:, 2])
     return torch.exp(-ang_vel_error / std**2)
 
 
-def lin_vel_z_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def track_lin_vel_xy_yaw_frame_pen(
+    env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
+    asset: Articulation = env.scene[asset_cfg.name]
+    vel_yaw = math_utils.quat_apply_inverse(
+        math_utils.yaw_quat(asset.data.root_quat_w), asset.data.root_lin_vel_w[:, :3]
+    )
+    lin_vel_error = torch.sum(torch.square(env.command_generator.command[:, :2] - vel_yaw[:, :2]), dim=1)
+    return lin_vel_error
+
+
+def track_ang_vel_z_world_pen(
+    env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
+    asset: Articulation = env.scene[asset_cfg.name]
+    ang_vel_error = torch.square(env.command_generator.command[:, 2] - asset.data.root_ang_vel_w[:, 2])
+    return ang_vel_error
+
+
+def lin_vel_z_l2(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     vel_z = torch.square(asset.data.root_lin_vel_b[:, 2])
     vel_z = torch.nan_to_num(vel_z, nan=0.0, posinf=0.0, neginf=0.0)
     return vel_z.clamp(max=25.0)
 
 
-def ang_vel_xy_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def ang_vel_xy_l2(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     ang_xy = torch.sum(torch.square(asset.data.root_ang_vel_b[:, :2]), dim=1)
     ang_xy = torch.nan_to_num(ang_xy, nan=0.0, posinf=0.0, neginf=0.0)
     return ang_xy.clamp(max=400.0)
 
-def body_ang_vel_xy_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def body_ang_vel_xy_l2(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     # waist_quat_w = asset.data.body_quat_w[:, asset_cfg.body_ids[0], :]
     waist_ang_vel = asset.data.body_ang_vel_w[:,asset_cfg.body_ids[0], :]
@@ -108,7 +127,7 @@ def body_ang_vel_xy_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneE
     return torch.sum(torch.square(waist_angle_vel_b[:, :2]), dim=1)
 
 
-def body_ang_acc_xy_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def body_ang_acc_xy_l2(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     waist_ang_acc = asset.data.body_ang_acc_w[:, asset_cfg.body_ids[0], :]
     root_quat_w = asset.data.root_quat_w[:, :]
@@ -118,20 +137,20 @@ def body_ang_acc_xy_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneE
     return acc_xy.clamp(max=1e6)
 
 
-def energy(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def energy(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     reward = torch.norm(torch.abs(asset.data.applied_torque * asset.data.joint_vel), dim=-1)
     return reward
 
 
-def joint_acc_l2(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def joint_acc_l2(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     acc = torch.sum(torch.square(asset.data.joint_acc[:, asset_cfg.joint_ids]), dim=1)
     acc = torch.nan_to_num(acc, nan=0.0, posinf=0.0, neginf=0.0)
     return acc.clamp(max=1e4)
 
 
-def action_rate_l2(env: BaseEnv | DexEnv) -> torch.Tensor:
+def action_rate_l2(env: BaseEnv | TienKung3Env) -> torch.Tensor:
     return torch.sum(
         torch.square(
             env.action_buffer._circular_buffer.buffer[:, -1, :] - env.action_buffer._circular_buffer.buffer[:, -2, :]
@@ -140,14 +159,14 @@ def action_rate_l2(env: BaseEnv | DexEnv) -> torch.Tensor:
     ).clamp(max=4.0)
 
 
-def undesired_contacts(env: BaseEnv | DexEnv, threshold: float, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+def undesired_contacts(env: BaseEnv | TienKung3Env, threshold: float, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     net_contact_forces = contact_sensor.data.net_forces_w_history
     is_contact = torch.max(torch.norm(net_contact_forces[:, :, sensor_cfg.body_ids], dim=-1), dim=1)[0] > threshold
     return torch.sum(is_contact, dim=1)
 
 
-def fly(env: BaseEnv | DexEnv, threshold: float, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+def fly(env: BaseEnv | TienKung3Env, threshold: float, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     net_contact_forces = contact_sensor.data.net_forces_w_history
     is_contact = torch.max(torch.norm(net_contact_forces[:, :, sensor_cfg.body_ids], dim=-1), dim=1)[0] > threshold
@@ -155,24 +174,24 @@ def fly(env: BaseEnv | DexEnv, threshold: float, sensor_cfg: SceneEntityCfg) -> 
 
 
 def flat_orientation_l2(
-    env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     return torch.sum(torch.square(asset.data.projected_gravity_b[:, :2]), dim=1)
 
 
-def is_terminated(env: BaseEnv | DexEnv) -> torch.Tensor:
+def is_terminated(env: BaseEnv | TienKung3Env) -> torch.Tensor:
     """Penalize terminated episodes that don't correspond to episodic timeouts."""
     return env.reset_buf * ~env.time_out_buf
 
 
-def alive_reward(env: BaseEnv | DexEnv) -> torch.Tensor:
+def alive_reward(env: BaseEnv | TienKung3Env) -> torch.Tensor:
     """Reward for staying alive and not terminating early."""
     return (~env.reset_buf).float()
 
 
 def feet_air_time_positive_biped(
-    env: BaseEnv | DexEnv, threshold: float, sensor_cfg: SceneEntityCfg
+    env: BaseEnv | TienKung3Env, threshold: float, sensor_cfg: SceneEntityCfg
 ) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     air_time = contact_sensor.data.current_air_time[:, sensor_cfg.body_ids]
@@ -190,7 +209,7 @@ def feet_air_time_positive_biped(
 
 
 def feet_slide(
-    env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     contacts = contact_sensor.data.net_forces_w_history[:, :, sensor_cfg.body_ids, :].norm(dim=-1).max(dim=1)[0] > 1.0
@@ -201,7 +220,7 @@ def feet_slide(
 
 
 def body_force(
-    env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, threshold: float = 500, max_reward: float = 400
+    env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, threshold: float = 500, max_reward: float = 400
 ) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     reward = contact_sensor.data.net_forces_w[:, sensor_cfg.body_ids, 2].norm(dim=-1)
@@ -211,7 +230,7 @@ def body_force(
     return reward
 
 
-def joint_deviation_l1(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def joint_deviation_l1(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     angle = asset.data.joint_pos[:, asset_cfg.joint_ids] - asset.data.default_joint_pos[:, asset_cfg.joint_ids]
     zero_flag = (
@@ -219,18 +238,18 @@ def joint_deviation_l1(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneE
     ) < 0.1
     return torch.sum(torch.abs(angle), dim=1) * zero_flag
 
-def waist_joint_deviation_l1(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def waist_joint_deviation_l1(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     angle = asset.data.joint_pos[:, asset_cfg.joint_ids] - asset.data.default_joint_pos[:, asset_cfg.joint_ids]
     return torch.sum(torch.abs(angle), dim=1)
 
-def waist_joint_velocity_l1(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def waist_joint_velocity_l1(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     vel = asset.data.joint_vel[:, asset_cfg.joint_ids]
     return torch.sum(torch.abs(vel), dim=1)
 
 def body_orientation_l2(
-    env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     asset: Articulation = env.scene[asset_cfg.name]
     body_orientation = math_utils.quat_apply_inverse(
@@ -239,7 +258,7 @@ def body_orientation_l2(
     return torch.sum(torch.square(body_orientation[:, :2]), dim=1)
 
 
-def feet_stumble(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+def feet_stumble(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
     return torch.any(
         torch.norm(contact_sensor.data.net_forces_w[:, sensor_cfg.body_ids, :2], dim=2)
@@ -249,7 +268,7 @@ def feet_stumble(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg) -> torch.Ten
 
 
 def feet_too_near_humanoid(
-    env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"), threshold: float = 0.2
+    env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"), threshold: float = 0.2
 ) -> torch.Tensor:
     assert len(asset_cfg.body_ids) == 2
     asset: Articulation = env.scene[asset_cfg.name]
@@ -259,35 +278,43 @@ def feet_too_near_humanoid(
 
 
 # Regularization Reward
-def ankle_torque(env: DexEnv) -> torch.Tensor:
+def ankle_torque(env: TienKung3Env) -> torch.Tensor:
     """Penalize large torques on the ankle joints."""
     return torch.sum(torch.square(env.robot.data.applied_torque[:, env.ankle_joint_ids]), dim=1)
 
 
-def ankle_action(env: DexEnv) -> torch.Tensor:
+def ankle_action(env: TienKung3Env) -> torch.Tensor:
     """Penalize ankle joint actions."""
     return torch.sum(torch.abs(env.action[:, env.ankle_joint_ids]), dim=1)
 
 
-def hip_roll_action(env: DexEnv) -> torch.Tensor:
+def hip_roll_action(env: TienKung3Env) -> torch.Tensor:
     """Penalize hip roll joint actions."""
     y_zero_flag = torch.abs(env.command_generator.command[:, 1]) < 0.1
     return y_zero_flag * torch.sum(torch.abs(env.action[:, [env.left_leg_ids[0], env.right_leg_ids[0]]]), dim=1)
 
 
-def hip_roll_vel(env: DexEnv) -> torch.Tensor:
+def hip_roll_vel(env: TienKung3Env) -> torch.Tensor:
     """Penalize hip roll joint velocities when commanded y-velocity is near zero."""
     y_zero_flag = torch.abs(env.command_generator.command[:, 1]) < 0.1
     hip_roll_joint_vel = env.robot.data.joint_vel[:, [env.left_leg_ids[0], env.right_leg_ids[0]]]
     return y_zero_flag * torch.sum(torch.abs(hip_roll_joint_vel), dim=1)
 
 
-def hip_yaw_action(env: DexEnv) -> torch.Tensor:
+def hip_yaw_action(env: TienKung3Env) -> torch.Tensor:
     """Penalize hip yaw joint actions."""
-    return torch.sum(torch.abs(env.action[:, [env.left_leg_ids[2], env.right_leg_ids[2]]]), dim=1)
+    yaw_zero_flag = torch.abs(env.command_generator.command[:, 2]) < 0.1
+    return yaw_zero_flag * torch.sum(torch.abs(env.action[:, [env.left_leg_ids[2], env.right_leg_ids[2]]]), dim=1)
 
 
-def feet_y_distance(env: DexEnv) -> torch.Tensor:
+def hip_yaw_vel(env: TienKung3Env) -> torch.Tensor:
+    """Penalize hip yaw joint velocities when commanded yaw-velocity is near zero."""
+    yaw_zero_flag = torch.abs(env.command_generator.command[:, 2]) < 0.1
+    hip_yaw_joint_vel = env.robot.data.joint_vel[:, [env.left_leg_ids[2], env.right_leg_ids[2]]]
+    return yaw_zero_flag * torch.sum(torch.abs(hip_yaw_joint_vel), dim=1)
+
+
+def feet_y_distance(env: TienKung3Env) -> torch.Tensor:
     """Penalize foot y-distance when the commanded y-velocity is low, to maintain a reasonable spacing."""
     leftfoot = env.robot.data.body_pos_w[:, env.feet_body_ids[0], :] - env.robot.data.root_link_pos_w[:, :]
     rightfoot = env.robot.data.body_pos_w[:, env.feet_body_ids[1], :] - env.robot.data.root_link_pos_w[:, :]
@@ -302,7 +329,7 @@ def feet_y_distance(env: DexEnv) -> torch.Tensor:
 # New gait-free reward functions for running
 # ========================================
 
-def feet_contact_alternation(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, threshold: float = 10.0) -> torch.Tensor:
+def feet_contact_alternation(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, threshold: float = 10.0) -> torch.Tensor:
     """Reward alternating foot contacts (one foot in air while other is grounded).
     
     Encourages natural bipedal gait without explicit phase tracking.
@@ -320,7 +347,7 @@ def feet_contact_alternation(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, 
     return single_stance * moving_flag
 
 
-def feet_air_time_reward(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, target_time: float = 0.3) -> torch.Tensor:
+def feet_air_time_reward(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, target_time: float = 0.3) -> torch.Tensor:
     """Reward appropriate air time for each foot.
     
     Encourages dynamic running motion without phase tracking.
@@ -337,7 +364,7 @@ def feet_air_time_reward(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, targ
     return reward * moving_flag
 
 
-def feet_contact_forces_balanced(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+def feet_contact_forces_balanced(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
     """Penalize unbalanced contact forces between feet.
     
     Prevents asymmetric gait patterns.
@@ -359,7 +386,7 @@ def feet_contact_forces_balanced(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityC
     return penalty * moving_flag
 
 
-def forward_velocity_reward(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+def forward_velocity_reward(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     """Reward forward velocity progress beyond command tracking.
     
     Encourages dynamic forward motion during movinging.
@@ -378,7 +405,7 @@ def forward_velocity_reward(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg = S
     return reward
 
 
-def feet_clearance(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg, sensor_cfg: SceneEntityCfg, min_height: float = 0.05) -> torch.Tensor:
+def feet_clearance(env: BaseEnv | TienKung3Env, asset_cfg: SceneEntityCfg, sensor_cfg: SceneEntityCfg, min_height: float = 0.05) -> torch.Tensor:
     """Reward lifting feet off ground during swing (cm).
     
     Prevents dragging feet.
@@ -403,7 +430,7 @@ def feet_clearance(env: BaseEnv | DexEnv, asset_cfg: SceneEntityCfg, sensor_cfg:
     return reward * moving_flag
 
 
-def contact_no_slip(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg) -> torch.Tensor:
+def contact_no_slip(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg) -> torch.Tensor:
     """Penalize foot velocity when in contact (slipping).
     
     Similar to feet_slide but with better scaling.
@@ -423,7 +450,7 @@ def contact_no_slip(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, asset_cfg
     return slip_penalty
 
 
-def step_frequency_reward(env: BaseEnv | DexEnv, sensor_cfg: SceneEntityCfg, target_freq: float = 2.5) -> torch.Tensor:
+def step_frequency_reward(env: BaseEnv | TienKung3Env, sensor_cfg: SceneEntityCfg, target_freq: float = 2.5) -> torch.Tensor:
     """Reward appropriate step frequency based on velocity.
     
     Higher velocity should result in appropriate stride frequency.
@@ -476,7 +503,7 @@ def gait_clock(phase, air_ratio, delta_t):
     return I_frc, I_spd
 
 
-def gait_feet_frc_perio(env: DexEnv, delta_t: float = 0.02) -> torch.Tensor:
+def gait_feet_frc_perio(env: TienKung3Env, delta_t: float = 0.02) -> torch.Tensor:
     """DEPRECATED: Use feet_contact_alternation instead."""
     non_zero_flag = torch.norm(env.command_generator.command[:, :2], dim=1) + torch.abs(env.command_generator.command[:, 2]) > 0.1
     left_frc_swing_mask = gait_clock(env.gait_phase[:, 0], env.phase_ratio[:, 0], delta_t)[0]
@@ -486,7 +513,7 @@ def gait_feet_frc_perio(env: DexEnv, delta_t: float = 0.02) -> torch.Tensor:
     reward = left_frc_score + right_frc_score
     return reward * non_zero_flag 
 
-def gait_feet_spd_perio(env: DexEnv, delta_t: float = 0.02) -> torch.Tensor:
+def gait_feet_spd_perio(env: TienKung3Env, delta_t: float = 0.02) -> torch.Tensor:
     """DEPRECATED: Use contact_no_slip instead."""
     non_zero_flag = torch.norm(env.command_generator.command[:, :2], dim=1) + torch.abs(env.command_generator.command[:, 2]) > 0.1
     left_spd_support_mask = gait_clock(env.gait_phase[:, 0], env.phase_ratio[:, 0], delta_t)[1]
@@ -497,21 +524,34 @@ def gait_feet_spd_perio(env: DexEnv, delta_t: float = 0.02) -> torch.Tensor:
     return reward * non_zero_flag
 
 
-def gait_feet_frc_support_perio(env: DexEnv, delta_t: float = 0.02) -> torch.Tensor:
+def gait_feet_frc_support_perio(env: TienKung3Env, delta_t: float = 0.02) -> torch.Tensor:
     """DEPRECATED: Use feet_air_time_reward instead."""
     non_zero_flag = torch.norm(env.command_generator.command[:, :2], dim=1) + torch.abs(env.command_generator.command[:, 2]) > 0.1
-    try:
-        left_frc_support_mask = gait_clock(env.gait_phase[:, 0], env.phase_ratio[:, 0], delta_t)[1]
-        right_frc_support_mask = gait_clock(env.gait_phase[:, 1], env.phase_ratio[:, 1], delta_t)[1]
-        left_frc_score = left_frc_support_mask * (1 - torch.exp(-100.0 * torch.square(env.avg_feet_force_per_step[:, 0])))
-        right_frc_score = right_frc_support_mask * (1 - torch.exp(-100.0 * torch.square(env.avg_feet_force_per_step[:, 1])))
-        reward = left_frc_score + right_frc_score
-        return reward * non_zero_flag
-    except AttributeError:
-        # Fallback if gait_phase not available
-        return torch.zeros(env.num_envs, device=env.device)
+    left_frc_support_mask = gait_clock(env.gait_phase[:, 0], env.phase_ratio[:, 0], delta_t)[1]
+    right_frc_support_mask = gait_clock(env.gait_phase[:, 1], env.phase_ratio[:, 1], delta_t)[1]
+    left_frc_score = left_frc_support_mask * (1 - torch.exp(-100.0 * torch.square(env.avg_feet_force_per_step[:, 0])))
+    right_frc_score = right_frc_support_mask * (1 - torch.exp(-100.0 * torch.square(env.avg_feet_force_per_step[:, 1])))
+    reward = left_frc_score + right_frc_score
+    return reward * non_zero_flag
 
+def gait_feet_soft_contact_support(
+    env: TienKung3Env,
+    delta_t: float = 0.04,
+    contact_threshold: float = 20.0,
+    std: float = 20.0,
+) -> torch.Tensor:
+    """Reward stance-foot contact with std-style smoothing."""
+    non_zero_flag = (torch.norm(env.command_generator.command[:, :2], dim=1)+ torch.abs(env.command_generator.command[:, 2])> 0.1)
+    left_support = gait_clock(env.gait_phase[:, 0], env.phase_ratio[:, 0], delta_t)[1]
+    right_support = gait_clock(env.gait_phase[:, 1], env.phase_ratio[:, 1], delta_t)[1]
 
+    contact_sensor: ContactSensor = env.scene.sensors["contact_sensor"]
+    fz = contact_sensor.data.net_forces_w[:, env.feet_cfg.body_ids, 2].clamp(min=0.0)
+    left_contact = torch.sigmoid((fz[:, 0] - contact_threshold) / std)
+    right_contact = torch.sigmoid((fz[:, 1] - contact_threshold) / std)
+
+    reward = left_support * left_contact + right_support * right_contact
+    return reward * non_zero_flag
 
 
 def stand_still(
@@ -566,14 +606,21 @@ def stand_still_vel(
     return torch.sum(torch.abs(vel), dim=1) * zero_flag
 
 
-def stand_still_feet_motion_penalty(env: DexEnv) -> torch.Tensor:
+def stand_still_feet_motion_penalty(
+    env: TienKung3Env,
+    zero_threshold: float = 0.1,
+) -> torch.Tensor:
     """Penalize foot motion when command is near zero to prevent treading in place."""
-    zero_flag = torch.norm(env.command_generator.command[:, :2], dim=1) + torch.abs(env.command_generator.command[:, 2]) <= 0.1
+    zero_flag = (
+        torch.norm(env.command_generator.command[:, :2], dim=1)
+        + torch.abs(env.command_generator.command[:, 2])
+        <= zero_threshold
+    )
     feet_speed_penalty = torch.sum(env.avg_feet_speed_per_step, dim=1)
     return feet_speed_penalty * zero_flag
 
 def stand_still_double_support(
-    env: BaseEnv | DexEnv,
+    env: BaseEnv | TienKung3Env,
     sensor_cfg: SceneEntityCfg,
     zero_threshold: float = 0.1,
     contact_threshold: float = 10.0,
@@ -612,7 +659,7 @@ def stand_still_double_support(
 
 
 def stand_still_body_lin_vel(
-    env: BaseEnv | DexEnv,
+    env: BaseEnv | TienKung3Env,
     asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
     zero_threshold: float = 0.1,
 ) -> torch.Tensor:

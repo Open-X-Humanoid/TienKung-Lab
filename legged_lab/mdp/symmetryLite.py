@@ -22,6 +22,7 @@ import torch
 #  'ankle_pitch_l_joint', 'ankle_pitch_r_joint', 'shoulder_roll_l_joint', 'shoulder_roll_r_joint', 'ankle_roll_l_joint', 'ankle_roll_r_joint', 'shoulder_yaw_l_joint', 'shoulder_yaw_r_joint', 
 #  'elbow_pitch_l_joint', 'elbow_pitch_r_joint']
 
+# tiangong2_pro
 # self.robot.joint_names: ['hip_roll_l_joint', 'hip_roll_r_joint', 'waist_yaw_joint', 'hip_pitch_l_joint', 'hip_pitch_r_joint', 
 #  'shoulder_pitch_l_joint', 'shoulder_pitch_r_joint', 'hip_yaw_l_joint', 'hip_yaw_r_joint', 'shoulder_roll_l_joint', 'shoulder_roll_r_joint',
 #  'knee_pitch_l_joint', 'knee_pitch_r_joint', 'shoulder_yaw_l_joint', 'shoulder_yaw_r_joint', 'ankle_pitch_l_joint', 'ankle_pitch_r_joint',  'elbow_pitch_l_joint', 'elbow_pitch_r_joint', 'ankle_roll_l_joint', 'ankle_roll_r_joint', 
@@ -212,7 +213,7 @@ def mirror_actions(actions):
     return result
 
 
-def data_augmentation_func_g1(env, obs, actions, obs_type):
+def data_augmentation_func_tienkung(env, obs, actions, obs_type):
 
 
     if obs_type == "policy":

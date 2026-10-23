@@ -468,7 +468,7 @@ class TienKungWalkAgentCfg(RslRlOnPolicyRunnerCfg):
             use_data_augmentation=False,
             use_mirror_loss=True,
             mirror_loss_coeff=100,
-            data_augmentation_func=mdp.data_augmentation_func_g1,
+            data_augmentation_func=mdp.data_augmentation_func_tienkung,
         ),
         rnd_cfg=None,  # RslRlRndCfg()
     )
